@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public float speed = 10f;
-    public float jumpforce = 12f;
+    public float jumpforce=10f;
     public Animator playeranimator;
 
-    public static bool gameOver;
+    
     private Rigidbody2D _rigidbody2D;
     private float _horizontal;
     private bool _isjumping = false;
@@ -25,11 +25,13 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "block")
+        //check if the player is on the block or platform
+        if (collision.gameObject.tag == "block" || collision.gameObject.tag=="platform")
         {
             _ontheblock = true;
         }
 
+        //Add points 
         if (collision.gameObject.tag == "point")
         {
             
@@ -38,6 +40,7 @@ public class Player : MonoBehaviour
             
         }
 
+        //check if the player made a collition with the winflag object or an obstacle
         if (collision.gameObject.tag == "winflag")
         {
             SceneManager.LoadScene("WinScene");
@@ -47,14 +50,23 @@ public class Player : MonoBehaviour
 
         }
 
+        //platform movement
+        if (collision.gameObject.tag == "platform")
+        {
+            this.transform.parent = collision.transform;
+        }
+
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "block")
+        //return false if the object is jumping out from the block
+        if (collision.gameObject.tag == "block" || collision.gameObject.tag=="platform")
         {
             _ontheblock = false;
+            this.transform.parent = null;
         }
+
     }
 
     // Update is called once per frame
@@ -70,6 +82,7 @@ public class Player : MonoBehaviour
    
     private void FixedUpdate()
     {
+        //revert the run animation
         playeranimator.SetFloat("speed", Mathf.Abs(_horizontal));
 
         if (_horizontal >= 0)
@@ -81,6 +94,7 @@ public class Player : MonoBehaviour
             transform.localRotation = Quaternion.Euler(0, 180, 0);
         }
         
+        //adding jump physics 
         if (_isjumping == true)
         {
             _isjumping = false;
@@ -96,3 +110,5 @@ public class Player : MonoBehaviour
 
     }
 }
+
+//dedicatoria a Jhan Bolivar xd

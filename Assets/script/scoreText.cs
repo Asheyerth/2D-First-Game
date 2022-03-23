@@ -18,6 +18,6 @@ public class scoreText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        points.text="Extra Points: "+score;
+        points.text="Study Points: "+score;
     }
 }
